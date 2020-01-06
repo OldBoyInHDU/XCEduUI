@@ -14,7 +14,7 @@
     <!--查询按钮-->
     <el-button type="primary" size="small" v-on:click="query">查询</el-button>
     <router-link class="mui-tab-item" :to="{
-      path:'/cms/page/page_add',
+      path:'/cms/page/add',
       query:{
         page:this.params.page,
         siteId:this.params.siteId
@@ -62,6 +62,13 @@
         prop="pageCreateTime"
         label="创建时间"
         width="180">
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        width="80">
+        <template slot-scope="page"> <!--插槽，获取当前页面-->
+          <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
+        </template>
       </el-table-column>
 
     </el-table>
@@ -111,6 +118,16 @@ export default {
           this.list = res.queryResult.list;
           this.total = res.queryResult.total;
         })
+    },
+    edit:function (pageId) {
+      //打开修改页面
+      this.$router.push({
+        path:'/cms/page/edit/'+pageId
+        // query:{
+        //   page:this.params.page,
+        //   siteId:this.params.siteId
+        // }
+      })
     }
 
   },

@@ -14,7 +14,17 @@ export const page_list = (page, size, params) => {
 //新增页面
 export const page_add = params => {
   //表单自动为json字符串
-  return http.requestPost(apiUrl + '/cms/page/add',params)
+  return http.requestPost(apiUrl + '/cms/page/add',params);
+}
+
+//根据id查询页面
+export const page_get = pageId => {
+  return http.requestQuickGet(apiUrl + '/cms/page/get/' + pageId);
+}
+
+//修改页面
+export const page_edit = (pageId,params) => {
+  return http.requestPut(apiUrl + '/cms/page/edit/'+pageId, params);
 }
 
 

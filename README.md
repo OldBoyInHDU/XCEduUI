@@ -7,109 +7,129 @@
   * button
   * table
   * pagination
-* js部分
 
-```html
-<template>
-<!--编写页面静态部分，即view部分-->
-  <div>
-<!--    测试页面-->
-    <el-button type="primary" size="small" v-on:click="query">查询</el-button>
-    <el-table
-      :data="list"
-      stripe
-      style="width: 100%">
-      <el-table-column
-        type="index"
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="pageName"
-        label="页面名称"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="pageAliase"
-        label="别名"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="pageType"
-        label="页面类型"
-        width="200">
-      </el-table-column>
-      <el-table-column
-        prop="pageWebPath"
-        label="访问路径"
-        width="250">
-      </el-table-column>
-      <el-table-column
-        prop="pagePhysicalPath"
-        label="物理路径"
-        width="250">
-      </el-table-column>
-      <el-table-column
-        prop="pageCreateTime"
-        label="创建时间"
-        width="180">
-      </el-table-column>
+# 20200106
 
-    </el-table>
-    <el-pagination
-      layout="prev, pager, next"
-      :page-size="params.size"
-      :total="total"
-      :current-page="params.page"
-      @current-change="changePage"
-      style="float: right"
+## 1. 本日内容
 
-    >
-    </el-pagination>
-  </div>
-</template>
+### 1.1 编写page-add.vue页面
 
-<script>
-//编写页面静态部分，即model和vm部分
-import * as cmsApi from '../api/cms'
-export default {
-  data() {
-    return {
-      list: [],
-      total:0,
-      params:{
-        page:1,
-        size:10
+* template部分，element-ui标签：
+  * form
+  * button
+  * MessageBox 弹框
+  * Message 消息提示
+
+### 1.2 完成编写page_edit.vue页面
+
+## 2 学习总结
+
+### 2.1 cms/router/index.js(路由)
+
+* `src/module/cms/router/index.js`
+* 该文件的主要作用
+  * 导入页面组件`component`
+  * 定义路径`path`
+  * 定义组件名`name`
+  * 是否隐藏`hidden`
+  * 子组件的引入`children`
+
+```javascript
+import Home from '@/module/home/page/home.vue';//引入页面
+import page_list from '@/module/cms/page/page_list.vue';
+import page_add from '@/module/cms/page/page_add.vue';
+export default [{
+    path: '/',
+    component: Home,
+    name: 'CMS', //菜单名称
+    hidden: false, //是否显示左侧菜单，显示false， 不显示为true
+    children: [
+      {
+        path: '/cms/page/page_list',//页面路径
+        component: page_list,//相对应的页面组件
+        name: '页面列表',//组件名
+        hidden: false //不隐藏
+      },
+      {
+        path: '/cms/page/page_add',
+        component: page_add,
+        name: '新增页面',
+        hidden: false
       }
-    }
-  },
-  methods:{
-    //分页查询
-    changePage:function (page) {
-      // console.log(page)
-      this.params.page = page;
-      this.query();//调用当前实例的换页方法
-    },
-    query:function () {
-      // alert("查询");
-      cmsApi.page_list(this.params.page,this.params.size)
-        .then((res)=>{
-          //将res结果数据赋值给数据模型对象
-          this.list = res.queryResult.list;
-          this.total = res.queryResult.total;
-        })
-    }
-
-  },
-  mounted() {
-    //当dom元素渲染完成后调用query
-    this.query();
+    ]
   }
+]
+```
+
+* 需要再`base/router/index.js`的路由中合并
+
+```javascript
+import Vue from 'vue';
+import Router from 'vue-router';
+Vue.use(Router);
+// 定义路由配置
+let routes = []
+let concat = (router) => {
+  routes = routes.concat(router)
 }
-</script>
+// // 导入路由规则
+import HomeRouter from '@/module/home/router'
+import CmsRouter from '@/module/cms/router' //自己的模块
+// 合并路由规则
+concat(HomeRouter) //加入home模块的路由
+concat(CmsRouter) //加入cms模块的路由
+export default routes;
+```
 
-<style>
-/*编写页面样式，不是必须*/
-</style>
 
+
+### 2.2 cms/api/cms.js(请求js)
+
+* `src/module/cms/api/cms.js`
+* 该文件的作用是向服务端发送请求
+
+```javascript
+import http from './../../../base/api/public' //引入http组件请求
+import querystring from 'querystring' //引入json转换工具
+let sysConfig = require('@/../config/sysConfig')
+let apiUrl = sysConfig.xcApiUrlPre;
+
+//页面查询
+export const page_list = (page, size, params) => {
+  //将params对象（json）拼接成key value串
+  let queryString = querystring.stringify(params);
+  //请求服务端的页面查询接口
+  return http.requestQuickGet(apiUrl + '/cms/page/list/'+page+'/'+size + '?' + queryString);
+}
+
+//新增页面
+export const page_add = params => {
+  //表单自动为json字符串
+  return http.requestPost(apiUrl + '/cms/page/add',params)
+}
+```
+
+### 2.3 修改路由
+
+* 页面js代码
+
+```javascript
+edit:function (pageId) {
+    //打开修改页面
+    this.$router.push({
+        path:'/cms/page/edit/'+pageId
+    })
+}
+```
+
+* cms/router/index.js
+
+```javascript
+{
+    path: '/cms/page/edit/:pageId', //注意url传参方式
+    component: page_edit,
+    name: '修改页面',
+    hidden: false
+}
 ```
 

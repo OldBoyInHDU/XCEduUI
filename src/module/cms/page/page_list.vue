@@ -13,6 +13,17 @@
     页面别名：<el-input v-model="params.pageAliase" placeholder="请输入内容" style="width: 100px"></el-input>
     <!--查询按钮-->
     <el-button type="primary" size="small" v-on:click="query">查询</el-button>
+    <router-link class="mui-tab-item" :to="{
+      path:'/cms/page/page_add',
+      query:{
+        page:this.params.page,
+        siteId:this.params.siteId
+      }
+
+    }" >
+      <el-button type="primary" size="small">新增页面</el-button>
+    </router-link>
+
     <!--查询结果界面-->
     <el-table
       :data="list"
@@ -102,6 +113,12 @@ export default {
         })
     }
 
+  },
+  created() {
+    //vue对象已创建，但是dom还未渲染
+    //取出路由中的参数，赋值给数据对象
+    this.params.page = Number.parseInt(this.$route.query.page || 1);
+    this.params.siteId = this.$route.query.siteId || '';
   },
   mounted() {
     //当dom元素渲染完成后调用query

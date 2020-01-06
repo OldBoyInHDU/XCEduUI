@@ -11,4 +11,10 @@ export const page_list = (page, size, params) => {
   return http.requestQuickGet(apiUrl + '/cms/page/list/'+page+'/'+size + '?' + queryString);
 }
 
+//新增页面
+export const page_add = params => {
+  //表单自动为json字符串
+  return http.requestPost(apiUrl + '/cms/page/add',params)
+}
+
 

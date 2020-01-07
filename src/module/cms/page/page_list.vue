@@ -68,7 +68,9 @@
         width="80">
         <template slot-scope="page"> <!--插槽，获取当前页面-->
           <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
+          <el-button type="text" size="small" @click="del(page.row.pageId)">删除</el-button>
         </template>
+
       </el-table-column>
 
     </el-table>
@@ -128,8 +130,22 @@ export default {
         //   siteId:this.params.siteId
         // }
       })
-    }
+    },
+    del:function (pageId) {
+      this.$confirm('您确认删除吗？','提示',{}).then(()=>{
+        //调用服务端接口
+        cmsApi.page_del(pageId).then(res=>{
+          if (res.success){
+            this.$message.success("删除成功");
+            //删除后自动刷新页面
+            this.query();
+          }else {
+            this.$message.error("删除失败")
+          }
+        })
+      })
 
+    }
   },
   created() {
     //vue对象已创建，但是dom还未渲染

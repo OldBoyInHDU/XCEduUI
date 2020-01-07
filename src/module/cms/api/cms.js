@@ -27,4 +27,9 @@ export const page_edit = (pageId,params) => {
   return http.requestPut(apiUrl + '/cms/page/edit/'+pageId, params);
 }
 
+//删除页面
+export const page_del = pageId => {
+  return http.requestDelete(apiUrl+'/cms/page/del/'+pageId);
+}
+
 

@@ -136,7 +136,7 @@
 
     },
     created: function () {
-      console.log("page_edit:test")
+      // console.log("page_edit:test")
       this.pageId=this.$route.params.pageId;
       //根据主键查询页面信息
       cmsApi.page_get(this.pageId).then((res) => {

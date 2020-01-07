@@ -117,6 +117,9 @@ export default {
                 });
                 //操作成功后清空表单
                 this.$refs['pageForm'].resetFields();
+              } else if (res.message){
+                //获得返回的错误信息
+                this.$message.error(res.message);
               } else {
                 this.$message.error("提交失败");
               }

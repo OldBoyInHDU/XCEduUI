@@ -69,6 +69,7 @@
         <template slot-scope="page"> <!--插槽，获取当前页面-->
           <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
           <el-button type="text" size="small" @click="del(page.row.pageId)">删除</el-button>
+          <el-button type="text" size="small" @click="preview(page.row.pageId)">页面预览</el-button>
         </template>
 
       </el-table-column>
@@ -145,6 +146,10 @@ export default {
         })
       })
 
+    },
+    preview:function (pageId) {
+      //打开浏览器窗口
+      window.open("http://www.xuecheng.com/cms/preview/"+pageId);
     }
   },
   created() {

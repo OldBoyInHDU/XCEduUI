@@ -166,7 +166,7 @@
           templateName:'首页'
         },
         {
-          templateId:'5a962bf8b00ffc514038fafa',
+          templateId:'5e37c9f65212000009004e62',
           templateName:'轮播图'
         }
       ]

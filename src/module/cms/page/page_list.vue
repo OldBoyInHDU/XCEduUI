@@ -31,7 +31,7 @@
       style="width: 100%">
       <el-table-column
         type="index"
-        width="100">
+        width="50">
       </el-table-column>
       <el-table-column
         prop="pageName"
@@ -41,17 +41,17 @@
       <el-table-column
         prop="pageAliase"
         label="别名"
-        width="200">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="pageType"
         label="页面类型"
-        width="200">
+        width="70">
       </el-table-column>
       <el-table-column
         prop="pageWebPath"
         label="访问路径"
-        width="250">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="pagePhysicalPath"
@@ -65,11 +65,12 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="80">
+        width="180">
         <template slot-scope="page"> <!--插槽，获取当前页面-->
           <el-button type="text" size="small" @click="edit(page.row.pageId)">编辑</el-button>
           <el-button type="text" size="small" @click="del(page.row.pageId)">删除</el-button>
           <el-button type="text" size="small" @click="preview(page.row.pageId)">页面预览</el-button>
+          <el-button type="text" size="small" @click="post(page.row.pageId)">发布</el-button>
         </template>
 
       </el-table-column>
@@ -150,6 +151,18 @@ export default {
     preview:function (pageId) {
       //打开浏览器窗口
       window.open("http://www.xuecheng.com/cms/preview/"+pageId);
+    },
+    post:function (pageId) {
+      this.$confirm('确认发布该页面吗？','提示',{}).then(()=>{
+        cmsApi.page_postPage(pageId).then(res=>{
+          if (res.success) {
+            console.log("发布页面id="+pageId);
+            this.$message.success("发布成功，请稍后查看结果");
+          } else {
+            this.$message.error("发布失败");
+          }
+        })
+      })
     }
   },
   created() {

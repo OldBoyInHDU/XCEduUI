@@ -32,4 +32,9 @@ export const page_del = pageId => {
   return http.requestDelete(apiUrl+'/cms/page/del/'+pageId);
 }
 
+//发布也米娜
+export const page_postPage = pageId => {
+  return http.requestPost(apiUrl+'/cms/page/postPage/'+pageId);
+}
+
 
